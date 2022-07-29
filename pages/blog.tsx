@@ -2,10 +2,10 @@ import { loadPosts } from '../lib/load-posts'
 
 // TODO: Need to fetch `posts` (by calling some API endpoint)
 //       before this page can be pre-rendered.
-function Blog({ posts }) {
+function Blog({ posts }: {posts: any}) {
     return (
       <ul>
-        {posts.map((post) => (
+        {posts.map((post: any) => (
           <li key={post.id}>{post.lastname}{post.firstname}</li>
         ))}
       </ul>

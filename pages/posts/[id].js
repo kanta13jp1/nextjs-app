@@ -55,10 +55,24 @@ export async function getStaticPaths() {
   
 // This function gets called at build time
 export async function getStaticProps({ params }) {
-    // Call an external API endpoint to get posts
-    const posts = await loadPosts()
     console.log('getStaticProps() called')
     console.log(params)
+
+    // If this request throws an uncaught error, Next.js will
+    // not invalidate the currently shown page and
+    // retry getStaticProps on the next request.
+    const res = await fetch('https://hello-world-1-6ccgk2l43a-an.a.run.app/users')
+    const posts = await res.json()
+
+    if (!res.ok) {
+        // If there is a server error, you might want to
+        // throw an error instead of returning so that the cache is not updated
+        // until the next successful request.
+        throw new Error(`Failed to fetch posts, received status ${res.status}`)
+    }
+
+    // If the request was successful, return the posts
+    // and revalidate every 10 seconds.
     // By returning { props: { posts } }, the Blog component
     // will receive `posts` as a prop at build time
     return {
